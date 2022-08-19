@@ -1,0 +1,55 @@
+.regist-div {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #e2e2e2;
+	border: 1px solid black;
+	width: 500px;
+	height: 14vh;
+	padding: 5px;
+}
+
+.regist-div > textarea {
+	width: 430px;
+	height: 12vh;
+	resize: none;
+	margin-right: 10px;
+}
+
+.regist-div > button {
+	font-size: 1em;
+}
+
+.todo-list-div {
+	background-color: #e2e2e2;
+	border: 1px solid black;
+	width: 500px;
+	height: 64vh;
+	padding: 5px;
+	overflow-y: scroll;
+}
+
+.todo-list-div > div {
+	display: flex;
+	margin: 3px;
+}
+
+.todo-list-div > div > input[type=checkbox] {
+	display: flex;
+	border: 1px solid black;
+	margin-right: 10px;
+}
+
+.todo-list-div > div > input[type=checkbox]:checked + textarea {
+	text-decoration: line-through;
+	opacity: 0.5;
+}
+
+.todo-list-div > div > textarea {
+	display: inline-block;
+	resize: none;
+	border: 1px solid black;
+	outline: none;
+	width: 490px;
+	height: 7.7vh;
+}
