@@ -16,7 +16,7 @@ window.onload = function () {
     if (todoList) {
         let todoListElem = document.getElementById("todo-list");
         for (let todo of todoList) {
-            todoListElem.append(createTodoElement(todo.value, todo.id, todo.checked).elem);
+            todoListElem.append(createTodoElement(todo.value, todo.id, todo.checked)[0]);
         }
         if (todoList.length != 0) {
             count = Number(todoList[0].id.split("-")[1]);
@@ -39,12 +39,11 @@ function regist() {
         localStorage.setItem("todoList", JSON.stringify(todoList));
     }
     else {
-        let todoElemAndId = createTodoElement(inputElem.value);
-        let todoDivElem = todoElemAndId.elem;
+        let [todoDivElem, todoId] = createTodoElement(inputElem.value);
         let todoListElem = document.getElementById("todo-list");
         todoListElem.prepend(todoDivElem);
         let todo = {
-            "id": todoElemAndId.id,
+            "id": todoId,
             "value": inputElem.value,
             "checked": false,
         };
@@ -54,17 +53,17 @@ function regist() {
         inputElem.focus();
     }
 }
-function createTodoElement(input, id, checked = false) {
+function createTodoElement(input, id = "", checked = false) {
     let todoDivElem = document.createElement("div");
     todoDivElem.setAttribute("class", "todo");
     let checkboxElem = document.createElement("input");
     checkboxElem.setAttribute("type", "checkbox");
     checkboxElem.checked = checked;
     let textareaElem = document.createElement("textarea");
-    textareaElem.setAttribute("readonly", true);
     textareaElem.setAttribute("class", "text");
+    textareaElem.readOnly = true;
     let textareaId;
-    if (id) {
+    if (id != "") {
         textareaId = id;
     }
     else {
@@ -77,29 +76,27 @@ function createTodoElement(input, id, checked = false) {
     textareaElem.value = input;
     todoDivElem.append(checkboxElem);
     todoDivElem.append(textareaElem);
-    // [return value] : todoDivElement, textarea.id
-    return {
-        "elem": todoDivElem,
-        "id": textareaId,
-    };
+    return [todoDivElem, textareaId];
 }
 function onTodoClick(e) {
     let inputElem = document.getElementById("todo-input");
-    if (currentFocusTodo === e.target.id) {
-        currentFocusTodo = null;
-        e.target.style.border = "1px solid black";
+    let target = e.target;
+    if (currentFocusTodo === target.id) {
+        currentFocusTodo = "";
+        target.style.border = "1px solid black";
         inputElem.value = "";
     }
     else {
         if (currentFocusTodo) {
             document.getElementById(currentFocusTodo).style.border = "1px solid black";
         }
-        currentFocusTodo = e.target.id;
-        e.target.style.border = "2px solid red";
-        inputElem.value = e.target.value;
+        currentFocusTodo = target.id;
+        target.style.border = "2px solid red";
+        inputElem.value = target.value;
     }
 }
 function check(elem, id) {
+    let todoList = JSON.parse(localStorage.getItem("todoList"));
     for (let todo of todoList) {
         if (id === todo.id) {
             if (elem.checked) {
@@ -127,11 +124,7 @@ function deleteTodo() {
     let todoList = [];
     for (let elem of todoListElem.childNodes) {
         if (elem.lastChild) {
-            todoList.push({
-                "id": elem.lastChild.id,
-                "value": elem.lastChild.value,
-                "checked": elem.firstChild.checked,
-            });
+            todoList.push(new ToDo(elem.lastChild.id, elem.lastChild.value, elem.firstChild.checked));
         }
     }
     localStorage.setItem("todoList", JSON.stringify(todoList));

@@ -23,7 +23,7 @@ window.onload = function() {
 	if (todoList) {
 		let todoListElem: HTMLElement = <HTMLElement>document.getElementById("todo-list");
 		for (let todo of todoList) {
-			todoListElem.append(<HTMLElement>createTodoElement(todo.value, todo.id, todo.checked).elem)
+			todoListElem.append(<HTMLElement>createTodoElement(todo.value, todo.id, todo.checked)[0])
 		}
 		if (todoList.length != 0) {
 			count = Number(todoList[0].id.split("-")[1]);
@@ -47,13 +47,12 @@ function regist() {
 		}
 		localStorage.setItem("todoList", JSON.stringify(todoList));
 	} else {
-		let todoElemAndId: HTMLElement = <HTMLElement>createTodoElement(inputElem.value);
-		let todoDivElem: object = todoElemAndId.elem;
-		let todoListElem: object = document.getElementById("todo-list");
+		let [todoDivElem, todoId]: [HTMLElement, string] = createTodoElement(inputElem.value);
+		let todoListElem: HTMLElement = <HTMLElement>document.getElementById("todo-list");
 		todoListElem.prepend(todoDivElem);
 		
-		let todo: object = {
-			"id" : todoElemAndId.id,
+		let todo: ToDo = {
+			"id" : todoId,
 			"value" : inputElem.value,
 			"checked" : false,
 		}
@@ -65,20 +64,20 @@ function regist() {
 	}
 }
 
-function createTodoElement(input, id, checked=false) {
-	let todoDivElem: object = document.createElement("div");
+function createTodoElement(input: string, id: string = "", checked: boolean = false): [HTMLElement, string] {
+	let todoDivElem: HTMLElement = <HTMLElement>document.createElement("div");
 	todoDivElem.setAttribute("class", "todo");
 	
-	let checkboxElem: object = document.createElement("input");
+	let checkboxElem: HTMLInputElement = <HTMLInputElement>document.createElement("input");
 	checkboxElem.setAttribute("type", "checkbox");
 	checkboxElem.checked = checked;
 	
-	let textareaElem: object = document.createElement("textarea");
-	textareaElem.setAttribute("readonly", true);
+	let textareaElem: HTMLTextAreaElement = <HTMLTextAreaElement>document.createElement("textarea");
 	textareaElem.setAttribute("class", "text");
+	textareaElem.readOnly = true;
 	
 	let textareaId: string;
-	if (id) {
+	if (id != "") {
 		textareaId = id;
 	} else {
 		count += 1;
@@ -93,32 +92,31 @@ function createTodoElement(input, id, checked=false) {
 	todoDivElem.append(checkboxElem);
 	todoDivElem.append(textareaElem);
 	
-	// [return value] : todoDivElement, textarea.id
-	return {
-		"elem" : todoDivElem,
-		"id" : textareaId,
-	};
+	return [todoDivElem, textareaId];
 }
 
-function onTodoClick(e) {
-	let inputElem: object = document.getElementById("todo-input");
+function onTodoClick(e: MouseEvent) {
+	let inputElem: HTMLInputElement = <HTMLInputElement>document.getElementById("todo-input");
+	let target: HTMLInputElement = <HTMLInputElement>e.target;
 	
-	if (currentFocusTodo === e.target.id) {
-		currentFocusTodo = null;
-		e.target.style.border = "1px solid black";
+	if (currentFocusTodo === target.id) {
+		currentFocusTodo = "";
+		target.style.border = "1px solid black";
 		inputElem.value = "";
 	} else {
 		if (currentFocusTodo) {
-			document.getElementById(currentFocusTodo).style.border = "1px solid black";
+			(<HTMLInputElement>document.getElementById(currentFocusTodo)).style.border = "1px solid black";
 		}
-		currentFocusTodo = e.target.id;
-		e.target.style.border = "2px solid red";
-		inputElem.value = e.target.value;
+		currentFocusTodo = target.id;
+		target.style.border = "2px solid red";
+		inputElem.value = target.value;
 	}
 }
 
-function check(elem, id) {
-	for (let todo: object of todoList) {
+function check(elem: HTMLInputElement, id: string) {
+	let todoList: Array<ToDo> = JSON.parse(<string>localStorage.getItem("todoList"));
+	
+	for (let todo of todoList) {
 		if (id === todo.id) {
 			if (elem.checked) {
 				todo.checked = true;
@@ -132,25 +130,25 @@ function check(elem, id) {
 }
 
 function deleteTodo() {
-	let todoListElem: object = document.getElementById("todo-list");
-	let removeList: Array<object> = [];
-	for (let elem: object of todoListElem.childNodes) {
-		if (elem.firstChild && elem.firstChild.checked) {
+	let todoListElem: HTMLElement = <HTMLElement>document.getElementById("todo-list");
+	let removeList: Array<ChildNode> = [];
+	for (let elem of todoListElem.childNodes) {
+		if (elem.firstChild && (<HTMLInputElement>elem.firstChild).checked) {
 			removeList.push(elem);
 		}
 	}
 	while (removeList.length != 0) {
-		removeList.pop().remove();
+		(<ChildNode>removeList.pop()).remove();
 	}
 	
 	let todoList: Array<object> = [];
 	for (let elem of todoListElem.childNodes) {
 		if (elem.lastChild) {
-			todoList.push({
-				"id" : elem.lastChild.id,
-				"value" : elem.lastChild.value,
-				"checked" : elem.firstChild.checked,
-			});
+			todoList.push(new ToDo(
+				(<HTMLElement>elem.lastChild).id,
+				(<HTMLInputElement>elem.lastChild).value,
+				(<HTMLInputElement>elem.firstChild).checked
+			));
 		}
 	}
 	localStorage.setItem("todoList", JSON.stringify(todoList));
