@@ -16,7 +16,7 @@
 	margin-right: 10px;
 }
 
-.regist-div > button {
+.regist-div > input[type=submit] {
 	font-size: 1em;
 }
 

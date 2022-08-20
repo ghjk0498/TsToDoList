@@ -1,7 +1,3 @@
-// 참고 url
-// https://poiemaweb.com/
-// https://hyunseob.github.io/2016/11/18/typescript-function/
-
 let count: number = 0;
 let currentFocusTodo: string;
 
@@ -21,7 +17,7 @@ window.onload = function() {
 	let todoList: Array<ToDo> = JSON.parse(<string>localStorage.getItem("todoList"));
 
 	if (todoList) {
-		let todoListElem: HTMLElement = <HTMLElement>document.getElementById("todo-list");
+		const todoListElem: HTMLElement = <HTMLElement>document.getElementById("todo-list");
 		for (let todo of todoList) {
 			todoListElem.append(<HTMLElement>createTodoElement(todo.value, todo.id, todo.checked)[0])
 		}
@@ -31,10 +27,21 @@ window.onload = function() {
 	} else {
 		todoList = [];
 	}
+	
+	(<HTMLTextAreaElement>document.getElementById("todo-input")).addEventListener("keydown", (e : KeyboardEvent) => {
+		if ((e.keyCode == 10 || e.keyCode == 13)) {
+			e.preventDefault();
+			if (e.ctrlKey) {
+				(<HTMLTextAreaElement>e.target).value += "\n";
+			} else {
+				(<HTMLInputElement>document.getElementById("regist-submit")).click();
+			}
+		}
+	});
 }
 
 function regist() {
-	let inputElem: HTMLInputElement = <HTMLInputElement>document.getElementById("todo-input");
+	const inputElem: HTMLInputElement = <HTMLInputElement>document.getElementById("todo-input");
 	let todoList: Array<ToDo> = JSON.parse(<string>localStorage.getItem("todoList"));
 	
 	if (currentFocusTodo) {
@@ -47,8 +54,8 @@ function regist() {
 		}
 		localStorage.setItem("todoList", JSON.stringify(todoList));
 	} else {
-		let [todoDivElem, todoId]: [HTMLElement, string] = createTodoElement(inputElem.value);
-		let todoListElem: HTMLElement = <HTMLElement>document.getElementById("todo-list");
+		const [todoDivElem, todoId]: [HTMLElement, string] = createTodoElement(inputElem.value);
+		const todoListElem: HTMLElement = <HTMLElement>document.getElementById("todo-list");
 		todoListElem.prepend(todoDivElem);
 		
 		let todo: ToDo = {
@@ -65,14 +72,14 @@ function regist() {
 }
 
 function createTodoElement(input: string, id: string = "", checked: boolean = false): [HTMLElement, string] {
-	let todoDivElem: HTMLElement = <HTMLElement>document.createElement("div");
+	const todoDivElem: HTMLElement = <HTMLElement>document.createElement("div");
 	todoDivElem.setAttribute("class", "todo");
 	
-	let checkboxElem: HTMLInputElement = <HTMLInputElement>document.createElement("input");
+	const checkboxElem: HTMLInputElement = <HTMLInputElement>document.createElement("input");
 	checkboxElem.setAttribute("type", "checkbox");
 	checkboxElem.checked = checked;
 	
-	let textareaElem: HTMLTextAreaElement = <HTMLTextAreaElement>document.createElement("textarea");
+	const textareaElem: HTMLTextAreaElement = <HTMLTextAreaElement>document.createElement("textarea");
 	textareaElem.setAttribute("class", "text");
 	textareaElem.readOnly = true;
 	
@@ -96,8 +103,8 @@ function createTodoElement(input: string, id: string = "", checked: boolean = fa
 }
 
 function onTodoClick(e: MouseEvent) {
-	let inputElem: HTMLInputElement = <HTMLInputElement>document.getElementById("todo-input");
-	let target: HTMLInputElement = <HTMLInputElement>e.target;
+	const inputElem: HTMLInputElement = <HTMLInputElement>document.getElementById("todo-input");
+	const target: HTMLInputElement = <HTMLInputElement>e.target;
 	
 	if (currentFocusTodo === target.id) {
 		currentFocusTodo = "";
@@ -130,7 +137,7 @@ function check(elem: HTMLInputElement, id: string) {
 }
 
 function deleteTodo() {
-	let todoListElem: HTMLElement = <HTMLElement>document.getElementById("todo-list");
+	const todoListElem: HTMLElement = <HTMLElement>document.getElementById("todo-list");
 	let removeList: Array<ChildNode> = [];
 	for (let elem of todoListElem.childNodes) {
 		if (elem.firstChild && (<HTMLInputElement>elem.firstChild).checked) {

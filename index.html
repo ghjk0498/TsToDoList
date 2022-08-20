@@ -5,11 +5,13 @@
 	<link rel="stylesheet" href="style.css">
 </head>
 <body>
-	<h3>ToDo 등록</h3>
-	<div class="regist-div">
-		<textarea id="todo-input" placeholder="내용을 입력해주세요." autofocus></textarea>
-		<button type="button" onclick="regist()">등록</button>
-	</div>
+	<form id="regist-form" onsubmit="regist(); return false;">
+		<h3>ToDo 등록</h3>
+		<div class="regist-div">
+			<textarea id="todo-input" placeholder="내용을 입력해주세요." autofocus required></textarea>
+			<input type="submit" id="regist-submit" value="등록"></button>
+		</div>
+	</form>
 	
 	<h3>ToDo 목록</h3>
 	<div id="todo-list" class="todo-list-div">
