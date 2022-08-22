@@ -15,11 +15,11 @@ class ToDo {
 
 window.onload = function() {
 	let todoList: Array<ToDo> = JSON.parse(<string>localStorage.getItem("todoList"));
-
+	
 	if (todoList) {
-		const todoListElem: HTMLElement = <HTMLElement>document.getElementById("todo-list");
+		const todoListElem = document.getElementById("todo-list");
 		for (let todo of todoList) {
-			todoListElem.append(<HTMLElement>createTodoElement(todo.value, todo.id, todo.checked)[0])
+			todoListElem?.append(<HTMLElement>createTodoElement(todo.value, todo.id, todo.checked)[0])
 		}
 		if (todoList.length != 0) {
 			count = Number(todoList[0].id.split("-")[1]);
@@ -28,7 +28,7 @@ window.onload = function() {
 		todoList = [];
 	}
 	
-	(<HTMLTextAreaElement>document.getElementById("todo-input")).addEventListener("keydown", (e : KeyboardEvent) => {
+	document.getElementById("todo-input")?.addEventListener("keydown", (e : KeyboardEvent) => {
 		if ((e.keyCode == 10 || e.keyCode == 13)) {
 			e.preventDefault();
 			if (e.ctrlKey) {
