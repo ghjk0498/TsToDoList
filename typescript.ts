@@ -15,6 +15,7 @@ class ToDo {
 
 window.onload = function() {
 	let todoList: Array<ToDo> = JSON.parse(<string>localStorage.getItem("todoList"));
+	console.log(todoList);
 
 	if (todoList) {
 		const todoListElem: HTMLElement = <HTMLElement>document.getElementById("todo-list");
@@ -26,6 +27,7 @@ window.onload = function() {
 		}
 	} else {
 		todoList = [];
+		localStorage.setItem("todoList", JSON.stringify(todoList));
 	}
 	
 	(<HTMLTextAreaElement>document.getElementById("todo-input")).addEventListener("keydown", (e : KeyboardEvent) => {

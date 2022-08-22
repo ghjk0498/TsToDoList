@@ -1,8 +1,4 @@
 "use strict";
-// 참고 url
-// https://poiemaweb.com/
-// https://hyunseob.github.io/2016/11/18/typescript-function/
-// @@@ 이민우 차장님 - 피드백 해주신거 참고해서 수정 필요
 let count = 0;
 let currentFocusTodo;
 class ToDo {
@@ -14,6 +10,7 @@ class ToDo {
 }
 window.onload = function () {
     let todoList = JSON.parse(localStorage.getItem("todoList"));
+    console.log(todoList);
     if (todoList) {
         const todoListElem = document.getElementById("todo-list");
         for (let todo of todoList) {
@@ -25,9 +22,9 @@ window.onload = function () {
     }
     else {
         todoList = [];
+        localStorage.setItem("todoList", JSON.stringify(todoList));
     }
     document.getElementById("todo-input").addEventListener("keydown", (e) => {
-        console.log(e.keyCode);
         if ((e.keyCode == 10 || e.keyCode == 13)) {
             e.preventDefault();
             if (e.ctrlKey) {
