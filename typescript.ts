@@ -13,9 +13,17 @@ class ToDo {
 	}
 }
 
+function test(n : number) {
+	let date = new Date().getTime();
+	for (let i = 0; i < n; i++) {
+		console.log(i);
+		regist();
+	}
+	console.log((new Date().getTime() - date) / 1000);
+}
+
 window.onload = function() {
 	let todoList: Array<ToDo> = JSON.parse(<string>localStorage.getItem("todoList"));
-	console.log(todoList);
 
 	if (todoList) {
 		const todoListElem: HTMLElement = <HTMLElement>document.getElementById("todo-list");

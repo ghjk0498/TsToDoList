@@ -8,9 +8,16 @@ class ToDo {
         this.checked = checked;
     }
 }
+function test(n) {
+    let date = new Date().getTime();
+    for (let i = 0; i < n; i++) {
+        console.log(i);
+        regist();
+    }
+    console.log((new Date().getTime() - date) / 1000);
+}
 window.onload = function () {
     let todoList = JSON.parse(localStorage.getItem("todoList"));
-    console.log(todoList);
     if (todoList) {
         const todoListElem = document.getElementById("todo-list");
         for (let todo of todoList) {
