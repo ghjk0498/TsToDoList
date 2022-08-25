@@ -35,10 +35,10 @@ window.onload = function () {
         if ((e.keyCode == 10 || e.keyCode == 13)) {
             e.preventDefault();
             if (e.ctrlKey) {
-                e.target.value += "\n";
+                document.getElementById("regist-submit").click();
             }
             else {
-                document.getElementById("regist-submit").click();
+                e.target.value += "\n";
             }
         }
     });

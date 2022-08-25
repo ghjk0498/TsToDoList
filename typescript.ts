@@ -42,9 +42,9 @@ window.onload = function() {
 		if ((e.keyCode == 10 || e.keyCode == 13)) {
 			e.preventDefault();
 			if (e.ctrlKey) {
-				(<HTMLTextAreaElement>e.target).value += "\n";
-			} else {
 				(<HTMLInputElement>document.getElementById("regist-submit")).click();
+			} else {
+				(<HTMLTextAreaElement>e.target).value += "\n";
 			}
 		}
 	});
